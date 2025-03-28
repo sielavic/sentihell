@@ -20,37 +20,46 @@ final class PostController extends AbstractController
     public function __construct(
         private readonly ImageRepository $imageRepository,
         private readonly VideoRepository $videoRepository,
-        private readonly string          $galleryUploadDir,
+        private readonly string          $galleryUploadDir
     )
     {
+        dd($videoRepository);
     }
 
     #[Route('/', name: 'gallery_list', methods: ['GET'])]
-    public function galleryList(Request $request): JsonResponse
+    public function galleryList(Request $request)
     {
-        $images = $this->imageRepository
-            ->createQueryBuilder('i')
-            ->andWhere('i.parentId IS NULL') // Только родительские изображения
-            ->andWhere('i.isPublished = :isPublished')
-            ->setParameter('isPublished', true)
-            ->orderBy('i.id', 'DESC')
-            ->getQuery()
-            ->getResult();
-
-        // Формируем ответ
-        $result = [
-            'status' => 'success',
-            'images' => []
-        ];
-
-        foreach ($images as $image) {
-            $result['images'][] = $this->extract($image);
-        }
-
-        return new JsonResponse($result);
+//        $images = $this->imageRepository
+//            ->createQueryBuilder('i')
+//            ->andWhere('i.parentId IS NULL') // Только родительские изображения
+//            ->andWhere('i.isPublished = :isPublished')
+//            ->setParameter('isPublished', true)
+//            ->orderBy('i.id', 'DESC')
+//            ->getQuery()
+//            ->getResult();
+//
+//        // Формируем ответ
+//        $result = [
+//            'status' => 'success',
+//            'images' => []
+//        ];
+//
+//        foreach ($images as $image) {
+//            $result['images'][] = $this->extract($image);
+//        }
+        $anal = 'anal karnaval';
+        $images = [];
+        return $this->render('test/indexTest.html.twig', compact('images', 'anal'));
+//        return new Response('aga');
     }
+    #[Route('/test/{id}', name: 'gallery_get', methods: ['GET'])]
+    public function galleryGet(Request $request, $id)
+    {
+        $anal = 'TEST GET' . $id;
+        $images = [];
+        return $this->render('test/indexTest.html.twig', compact('images', 'anal'));
 
-
+    }
     private function extract(Image $image): array
     {
         return [
